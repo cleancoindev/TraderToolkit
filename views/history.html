@@ -1,0 +1,32 @@
+<?php
+    $scripts[] = 'https://www.google.com/jsapi';
+    $scripts[] = 'http://code.jquery.com/ui/1.10.0/jquery-ui.js';
+    $scripts[] = 'js/history.js';
+
+    if (isset($_POST['quote'])) {
+        echo json_encode(YahooFinanceHistory::getHistory(
+            $_POST['quote'],
+            $_POST['start-date'],
+            $_POST['end-date'],
+            'd'
+        ));
+
+        exit();
+    }
+?>
+
+<form id="history-form" action="index.php?p=history&format=json" method="post" class="form-search">
+    <fieldset>
+        <input type="text" name="quote" placeholder="Stock Symbol" class="input-medium search-query" />
+        <button class="btn btn-primary" type="submit">Get History</button>
+        <p>
+            Start: <input type="text" class="datepicker" name="start-date" />
+        </p>
+        <p>
+            End: <input type="text" class="datepicker" name="end-date" />
+        </p>
+    </fieldset>
+</form>
+
+<div id="history-display">
+</div>

@@ -1,0 +1,18 @@
+<?php
+    $scripts[] = 'js/news.js';
+
+    if (isset($_POST['quote'])) {
+        echo json_encode(YahooFinanceNews::getNews($_POST['quote']));
+        exit();
+    }
+?>
+
+<form id="news-form" action="index.php?p=news&format=json" method="post" class="form-search">
+    <fieldset>
+        <input type="text" name="quote" placeholder="Stock Symbol" class="input-medium search-query" />
+        <button class="btn btn-primary" type="submit">Get News</button>
+    </fieldset>
+</form>
+
+<div id="news-display" class="well">
+</div>

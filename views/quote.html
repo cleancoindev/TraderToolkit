@@ -1,0 +1,34 @@
+<?php
+    $scripts[] = 'js/quote.js';
+
+    if (isset($_POST['quote'])) {
+        echo json_encode(YahooFinanceQuotes::getQuotes(array($_POST['quote'])));
+        exit();
+    }
+?>
+
+<form id="quote-form" action="index.php?p=quote&format=json" method="post" class="form-search">
+    <fieldset>
+        <input type="text" name="quote" placeholder="Stock Symbol" class="input-medium search-query" />
+        <button class="btn btn-primary" type="submit">Get Quote</button>
+    </fieldset>
+</form>
+
+<div id="quote-display" class="well">
+    <div class="row">
+        <div class="span3">
+            <h3><span id="stock"></span></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span1">
+            Last: $<span id="latest"></span>
+        </div>
+        <div class="span1">
+            Open: $<span id="open"></span>
+        </div>
+        <div class="span1">
+            Close: $<span id="close"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<?php
+    $pages = array(
+        'Home'    => 'home',
+        'Quote'   => 'quote',
+        'History' => 'history',
+        'News'    => 'news'
+    );
+?>
+<ul class="nav nav-pills nav-stacked">
+    <?php
+    foreach ($pages as $label => $page) {
+    ?>
+        <li class="<?php echo $page === $view ? 'active' : ''; ?>">
+            <a href="index.php?p=<?php echo $page; ?>"><?php echo $label; ?></a>
+        </li>
+    <?php
+    }
+    ?>
+</ul>
