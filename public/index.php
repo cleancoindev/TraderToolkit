@@ -8,7 +8,9 @@
 
     $stylesheets = array(
         'bootstrap/css/bootstrap.min.css',
-        'http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css'
+        'http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css',
+        'css/style.css',
+        'css/history.css'
     );
     
     if ($_GET['format'] === 'json') {

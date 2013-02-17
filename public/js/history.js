@@ -10,11 +10,13 @@
 
         options = {
             legend:'none',
-            width: 900,
-            height: 300
+            width: $('#history-form').width(),
+            height: $('#history-form').width() / 3,
+            backgroundColor: {fill: 'transparent'},
+            seriesType: 'candlesticks'
         };
 
-        chart = new google.visualization.CandlestickChart(document.getElementById('history-display'));
+        chart = new google.visualization.ComboChart(document.getElementById('history-display'));
         chart.draw(data, options);
     }
 
@@ -33,7 +35,6 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#history-display').fadeIn();
-
                     history = data.map(function(element) {
                         var values = element.slice(1, 5).map(function(value) {
                             return parseInt(value);

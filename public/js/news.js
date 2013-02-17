@@ -16,11 +16,11 @@
                     $('#news-display').fadeIn();
                     $.each(data, function(index, value) {
                         $('#news-display').append(
-                            '<h3>' + value[1][0] + '</h3>'
+                            '<div class="row"><div class="span"><h3>' + value[1][0] + '</h3>'
                             + '<h5>' + value[0][0] + '</h5>'
-                            + '<p>' + value[2][0] + '</p>'
+                            + '<p>' + (value[2][0] === undefined ? '' : value[2][0]) + '</p>'
                             + '<a href="' + value[3][0] + '">' 
-                            + value[3][0] + '</a>'
+                            + value[3][0] + '</a></div></div>'
                         );
                     });
                 }
