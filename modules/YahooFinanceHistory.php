@@ -28,13 +28,16 @@ class YahooFinanceHistory
     private static function _getHistory()
     {
         $args   = func_get_args();
-        $params = array('s', 'a', 'b', 'c', 'd', 'e', 'f', 'w');
+        $params = array('s', 'a', 'b', 'c', 'd', 'e', 'f', 'g');
 
         $query = self::URI . '?' . http_build_query(array_combine($params, $args)) . '&ignore=.csv';
 
         $result = file_get_contents($query);
 
-        return array_map('str_getcsv', str_getcsv($result, "\n"));
+        $history = array_map('str_getcsv', str_getcsv($result, "\n"));
+        array_shift($history);
+
+        return array_reverse($history);
     }
 }
 

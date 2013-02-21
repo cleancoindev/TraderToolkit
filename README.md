@@ -1,0 +1,1 @@
+Requires trader PECL extension

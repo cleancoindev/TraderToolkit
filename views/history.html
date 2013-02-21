@@ -4,33 +4,46 @@
     $scripts[] = 'js/history.js';
 
     if (isset($_POST['quote'])) {
+        $analyzer = new IndicatorAnalysis(
+            $_POST['quote'],
+            $_POST['start-date'],
+            $_POST['end-date']
+        );
+        $analyzer->addIndicator('SMA', new SMA());
+        echo json_encode($analyzer->generate());
+        /*
         echo json_encode(YahooFinanceHistory::getHistory(
             $_POST['quote'],
             $_POST['start-date'],
             $_POST['end-date'],
             'd'
         ));
+        */
 
         exit();
     }
 ?>
 
-<form id="history-form" action="index.php?p=history&format=json" method="post" class="form-search">
+<form id="history-form" action="index.php?p=history&format=json" method="post" class="form-search form-horizontal">
     <fieldset>
-        <dl class="dl-horizontal">
-        <div class="row">
+        <div class="control-group">
             <input type="text" name="quote" placeholder="Stock Symbol" class="input-medium search-query" />
             <button class="btn btn-primary" type="submit">Get History</button>
         </div>
-        <div class="row">
-            <dt>Start:</dt><dd><input type="text" class="datepicker" name="start-date" /></dd>
+        <div class="control-group">
+            <label class="control-label">Start:</label>
+            <div class="controls">
+                <input type="text" class="datepicker" name="start-date" />
+            </div>
         </div>
-        <div class="row">
-            <dt>End:</dt><dd><input type="text" class="datepicker" name="end-date" /></dd>
+        <div class="control-group">
+            <label class="control-label">End:</label>
+            <div class="controls">
+                <input type="text" class="datepicker" name="end-date" />
+            </div>
         </div>
-        <dl>
     </fieldset>
 </form>
 
-<div id="history-display" class="well">
+<div id="charts">
 </div>
