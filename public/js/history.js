@@ -2,6 +2,14 @@
     google.load('visualization', '1', {packages: ['corechart']});
 
     var formatFunctions = {
+        format: function(data) {
+            data = data.map(function(element) {
+                return [element[0], parseFloat(element[1])];
+            });
+
+            return data;
+        },
+
         formatHistoryData: function(data) {
             var history = data.map(function(element) {
                 var values = element.slice(1).map(function(value) {
@@ -24,64 +32,86 @@
         },
 
         formatSMAData: function(data) {
-            var sma = data.map(function(element) {
-                return [element[0], parseFloat(element[1])];
+            return formatFunctions.format(data);
+        },
+
+        formatEMAData: function(data) {
+            return formatFunctions.format(data);
+        },
+
+        formatMACDData: function(data) {
+            var data = data.map(function(element) {
+                var values = element.slice(1).map(function(value) {
+                    return parseFloat(value);
+                });
+                values.unshift(element[0]);
+
+                return values;
             });
 
-            return sma;
+            return data;
         }
     };
 
     var visualizationFunctions = {
-        historyVisualization: function(data) {
-            var options = {
-                legend:'none',
-                width: $('#history-form').width(),
-                height: $('#history-form').width() / 3,
-                backgroundColor: {fill: 'transparent'},
-                hAxis: {slantedText: true},
-            };
+        options: {
+            legend:'none',
+            width: $('#history-form').width(),
+            height: $('#history-form').width() / 3,
+            backgroundColor: {fill: 'transparent'},
+            hAxis: {slantedText: true},
+        },
 
+        historyVisualization: function(data, options) {
+            $.extend(options, {
+                title: 'Price History'
+            });
             var display = $('#History-display');
             var visualization = new google.visualization.CandlestickChart(display.get(0));
             visualization.draw(data, options);
-            display.prepend('<span>Price History</span>');
         },
 
-        volumeVisualization: function(data) {
-            var options = {
-                legend:'none',
-                width: $('#history-form').width(),
-                height: $('#history-form').width() / 3,
-                backgroundColor: {fill: 'transparent'},
-                hAxis: {slantedText: true}
-            };
-
+        volumeVisualization: function(data, options) {
+            $.extend(options, {
+                title: 'Volume'
+            });
             var display = $('#Volume-display');
             var visualization = new google.visualization.ColumnChart(display.get(0));
             visualization.draw(data, options);
-            display.prepend('<span>Volume</span>');
         },
 
-        smaVisualization: function(data) {
-            var options = {
-                legend:'none',
-                width: $('#history-form').width(),
-                height: $('#history-form').width() / 3,
-                backgroundColor: {fill: 'transparent'},
-                hAxis: {slantedText: true}
-            };
-
+        smaVisualization: function(data, options) {
+            $.extend(options, {
+                title: 'Simple Moving Average (10 week)'
+            });
             var display = $('#SMA-display');
             var visualization = new google.visualization.LineChart(display.get(0));
             visualization.draw(data, options);
-            display.prepend('<span>Simple Moving Average</span>');
+        },
+
+        emaVisualization: function(data, options) {
+            $.extend(options, {
+                title: 'Exponential Moving Average (10 week)'
+            });
+            var display = $('#EMA-display');
+            var visualization = new google.visualization.LineChart(display.get(0));
+            visualization.draw(data, options);
+        },
+
+        macdVisualization: function(data, options) {
+            $.extend(options, {
+                title: 'Moving Average Convergence/Divergence (26 week slow, 12 week fast, 9 week signal)'
+            });
+            var display = $('#MACD-display');
+            var visualization = new google.visualization.LineChart(display.get(0));
+            visualization.draw(data, options);
         }
     };
 
     function setupVisualization(name, data) {
+        var options = visualizationFunctions.options;
         data = google.visualization.arrayToDataTable(chartData, true);
-        visualizationFunctions[name.toLowerCase() + 'Visualization'](data);
+        visualizationFunctions[name.toLowerCase() + 'Visualization'](data, options);
     }
 
     function format(name, data) {

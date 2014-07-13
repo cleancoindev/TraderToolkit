@@ -1,18 +1,10 @@
 <?php
 
-class SMA extends TechnicalIndicator
+class SMA extends MovingAverage
 {
-    private $_movingAverage;
-
-    function __construct($period = 30)
+    function __construct($period = 10)
     {
-        $this->period = $period;
-        $this->_movingAverage = new MovingAverage('trader_sma', $period);
-    }
-
-    public function generate($timeSeries)
-    {
-        return $this->_movingAverage->generate($timeSeries);
+        parent::__construct('trader_sma', $period);
     }
 }
 

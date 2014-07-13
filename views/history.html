@@ -9,16 +9,12 @@
             $_POST['start-date'],
             $_POST['end-date']
         );
-        $analyzer->addIndicator('SMA', new SMA());
+
+        $analyzer->addIndicator('SMA', new SMA())
+            ->addIndicator('EMA', new EMA(15))
+            ->addIndicator('MACD', new MACD(15));
+
         echo json_encode($analyzer->generate());
-        /*
-        echo json_encode(YahooFinanceHistory::getHistory(
-            $_POST['quote'],
-            $_POST['start-date'],
-            $_POST['end-date'],
-            'd'
-        ));
-        */
 
         exit();
     }

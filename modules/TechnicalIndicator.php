@@ -1,15 +1,10 @@
 <?php
 
-abstract class TechnicalIndicator
+interface TechnicalIndicator
 {
-    protected $period;
+    public function getOffset();
 
-    public function getPeriod()
-    {
-        return $this->period;
-    }
-
-    abstract public function generate($timeSeries);
+    public function generate($timeSeries);
 }
 
 ?>

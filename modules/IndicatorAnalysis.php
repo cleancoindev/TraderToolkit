@@ -2,7 +2,7 @@
 
 class IndicatorAnalysis
 {
-    private $_maxPeriod;
+    private $_maxOffset;
     private $_quote;
     private $_startDate;
     private $_endDate;
@@ -10,7 +10,7 @@ class IndicatorAnalysis
 
     function __construct($quote, $startDate, $endDate, $indicators = null)
     {
-        $this->_maxPeriod  = 0;
+        $this->_maxOffset  = 0;
         $this->_quote      = $quote;
         $this->_startDate  = $startDate;
         $this->_endDate    = $endDate;
@@ -19,9 +19,9 @@ class IndicatorAnalysis
 
     public function addIndicator($name, TechnicalIndicator $indicator)
     {
-        if ($indicator->getPeriod() > $this->_maxPeriod)
+        if ($indicator->getOffset() > $this->_maxOffset)
         {
-            $this->_maxPeriod = $indicator->getPeriod();
+            $this->_maxOffset = $indicator->getOffset();
         }
 
         $this->_indicators[$name] = $indicator;
@@ -32,14 +32,12 @@ class IndicatorAnalysis
     public function generate()
     {
         $startDate = date('Y-m-d', 
-            strtotime('-' . $this->_maxPeriod . ' week', strtotime($this->_startDate))
+            strtotime('-' . $this->_maxOffset . ' week', strtotime($this->_startDate))
         );
 
         $timeSeries = YahooFinanceHistory::getHistory($this->_quote, $startDate, $this->_endDate, 'w');
 
-        //print_r(array($this->_maxPeriod, count($timeSeries), $startDate));
-        //die();
-        return $this->_formatAnalysisOutput($timeSeries, $this->_indicators, $this->_maxPeriod - 1);
+        return $this->_formatAnalysisOutput($timeSeries, $this->_indicators, $this->_maxOffset - 1);
     }
 
     private function _formatAnalysisOutput($timeSeries, $indicators, $offset)
@@ -77,7 +75,13 @@ class IndicatorAnalysis
 
     private function _generate($indicators, $timeSeries)
     {
-        return array_map(function($indicator) use ($timeSeries) {
+        $maxOffset = $this->_maxOffset;
+        return array_map(function($indicator) use ($timeSeries, $maxOffset) {
+            $timeSeries = array_slice(
+                $timeSeries, 
+                $maxOffset - $indicator->getOffset()
+            );
+
             return $indicator->generate($timeSeries);
         }, $indicators);
     }

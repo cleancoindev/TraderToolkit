@@ -1,19 +1,35 @@
 <?php
 
-class MovingAverage extends TechnicalIndicator
+class MovingAverage implements TechnicalIndicator
 {
-    private $movingAverageFunction;
+    private $_period;
+    private $_movingAverageFunction;
 
     function __construct($movingAverageFunction, $period)
     {
-        $this->movingAverageFunction = $movingAverageFunction;
-        $this->period = $period;
+        $this->_movingAverageFunction = $movingAverageFunction;
+        $this->_period = $period;
     }
 
     public function generate($timeSeries)
     {
-        $timeSlice = array_slice($timeSeries, $this->period - 1);
+        $timeSlice = array_slice($timeSeries, $this->_period - 1);
 
+        return $this->_formatOutput($timeSlice, $timeSeries);
+    }
+
+    private function _formatOutput($timeSlice, $timeSeries)
+    {
+        return array_filter(
+            $this->_generate($timeSlice, $timeSeries), 
+            function($value) {
+                return count($value) > 0 && $value[0];
+            }
+        );
+    }
+
+    private function _generate($timeSlice, $timeSeries)
+    {
         return array_map(function($timeEntry, $ma) {
             return array($timeEntry, $ma);
         }, $this->_getDates($timeSlice), $this->_getMA($timeSeries));
@@ -28,12 +44,17 @@ class MovingAverage extends TechnicalIndicator
 
     private function _getMA($timeSeries)
     {
-        return call_user_func($this->movingAverageFunction, 
+        return call_user_func($this->_movingAverageFunction, 
             array_map(function($timeEntry) {
                 return $timeEntry[4];
             }, $timeSeries), 
-            $this->period
+            $this->_period
         );
+    }
+
+    public function getOffset()
+    {
+        return $this->_period;
     }
 }
 
